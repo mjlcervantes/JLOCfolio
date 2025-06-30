@@ -1,0 +1,70 @@
+/* Education section styles */
+.education-section {
+  padding: 5rem 0;
+}
+
+.education-card {
+  background-color: #1e293b;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid #334155;
+  transition: all 0.3s;
+  margin-bottom: 1.5rem;
+}
+
+.education-card:hover {
+  border-color: #3b82f6;
+}
+
+.education-icon-container {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+}
+
+.education-college-icon {
+  background: linear-gradient(to bottom right, #3b82f6, #8b5cf6);
+}
+
+.education-highschool-private-icon {
+  background: linear-gradient(to bottom right, #10b981, #3b82f6);
+}
+
+.education-highschool-public-icon {
+  background: linear-gradient(to bottom right, #f59e0b, #db2777);
+}
+
+.education-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.education-institution {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  text-align: center;
+}
+
+.education-college-institution {
+  color: #60a5fa;
+}
+
+.education-highschool-private-institution {
+  color: #34d399;
+}
+
+.education-highschool-public-institution {
+  color: #fbbf24;
+}
+
+.education-program {
+  color: #9ca3af;
+  text-align: center;
+}

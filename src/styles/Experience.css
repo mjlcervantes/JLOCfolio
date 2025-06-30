@@ -1,0 +1,149 @@
+/* Experience section styles */
+.experience-section {
+  padding: 5rem 0;
+}
+
+.experience-subsection {
+  margin-bottom: 3rem;
+}
+
+.experience-subsection-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.experience-title {
+  color: #60a5fa;
+}
+
+.seminars-title {
+  color: #a855f7;
+}
+
+.experience-card {
+  background-color: #1e293b;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid #334155;
+  transition: all 0.3s;
+  margin-bottom: 1.5rem;
+}
+
+.experience-card:hover {
+  border-color: #3b82f6;
+}
+
+.seminar-card {
+  background-color: #1e293b;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid #334155;
+  transition: all 0.3s;
+}
+
+.seminar-card:hover {
+  border-color: #a855f7;
+}
+
+.experience-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.experience-title-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.experience-period {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #60a5fa;
+  margin-bottom: 0.5rem;
+}
+
+.experience-period-icon {
+  margin-right: 0.5rem;
+}
+
+.experience-type {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: #2563eb;
+  color: white;
+  font-size: 0.875rem;
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+}
+
+.experience-description {
+  color: #d1d5db;
+  text-align: center;
+}
+
+.seminar-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.seminar-details {
+  display: flex;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.seminar-date, .seminar-venue {
+  display: flex;
+  align-items: center;
+  margin: 0 0.5rem;
+}
+
+.seminar-icon {
+  margin-right: 0.25rem;
+}
+
+.seminars-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .experience-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .experience-title-text {
+    text-align: left;
+    margin-bottom: 0;
+  }
+  
+  .experience-period {
+    justify-content: flex-start;
+    margin-bottom: 0;
+  }
+  
+  .experience-type-container {
+    text-align: left;
+  }
+  
+  .experience-description {
+    text-align: left;
+  }
+  
+  .seminars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
