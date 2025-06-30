@@ -3,11 +3,9 @@ import '../styles/Hero.css';
 
 const Hero = ({ scrollToSection }) => {
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: "#0f172a" }}>
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20" style={{ background: "linear-gradient(to bottom right, rgba(30, 64, 175, 0.2), rgba(126, 34, 206, 0.2))" }}></div>
-      <div className="absolute inset-0" style={{ 
-        background: "radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.1), transparent), radial-gradient(circle at 70% 80%, rgba(139, 92, 246, 0.1), transparent)" 
-      }}></div>
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.1),transparent)] bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.1),transparent)]"></div>
       
       <div className="text-center z-10 max-w-4xl mx-auto px-4">
         <div className="mb-8">

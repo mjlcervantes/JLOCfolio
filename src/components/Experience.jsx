@@ -44,23 +44,23 @@ const Experience = () => {
         <div className="space-y-8">
           {/* Experiences */}
           <div className="mb-12">
-            <h3 className="text-2xl font-bold mb-6 text-blue-400 text-center">Extra Co-curricular Works</h3>
+            <h3 className="text-2xl font-bold mb-6 text-blue-400">Extra Co-curricular Works</h3>
             <div className="space-y-6">
               {experiences.map((exp, index) => (
                 <div key={index} className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-blue-500 transition-colors">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                    <h4 className="text-xl font-semibold text-white text-center md:text-left">{exp.title}</h4>
-                    <div className="flex items-center justify-center md:justify-start space-x-2 text-blue-400">
+                    <h4 className="text-xl font-semibold text-white">{exp.title}</h4>
+                    <div className="flex items-center space-x-2 text-blue-400">
                       <Calendar size={16} />
                       <span className="text-sm">{exp.period}</span>
                     </div>
                   </div>
-                  <div className="mb-3 text-center md:text-left">
+                  <div className="mb-3">
                     <span className="inline-block px-3 py-1 bg-blue-600 text-white text-sm rounded-full">
                       {exp.type}
                     </span>
                   </div>
-                  <p className="text-gray-300 text-center md:text-left">{exp.description}</p>
+                  <p className="text-gray-300">{exp.description}</p>
                 </div>
               ))}
             </div>
@@ -68,12 +68,12 @@ const Experience = () => {
 
           {/* Seminars */}
           <div>
-            <h3 className="text-2xl font-bold mb-6 text-purple-400 text-center">Seminars & Trainings</h3>
+            <h3 className="text-2xl font-bold mb-6 text-purple-400">Seminars & Trainings</h3>
             <div className="grid md:grid-cols-2 gap-6">
               {seminars.map((seminar, index) => (
                 <div key={index} className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-purple-500 transition-colors">
-                  <h4 className="text-lg font-semibold text-white mb-3 text-center">{seminar.title}</h4>
-                  <div className="flex items-center justify-center space-x-4 text-gray-400 text-sm">
+                  <h4 className="text-lg font-semibold text-white mb-3">{seminar.title}</h4>
+                  <div className="flex items-center space-x-4 text-gray-400 text-sm">
                     <div className="flex items-center space-x-1">
                       <Calendar size={14} />
                       <span>{seminar.date}</span>

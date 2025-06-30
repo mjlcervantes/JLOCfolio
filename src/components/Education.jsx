@@ -14,11 +14,11 @@ const Education = () => {
         
         <div className="space-y-6">
           <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-blue-500 transition-colors">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mb-4">
+            <div className="flex items-start space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
                 <GraduationCap size={24} />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="text-xl font-semibold text-white mb-2">College (Institute)</h3>
                 <p className="text-blue-400 font-medium mb-1">Technological Institute of the Philippines</p>
                 <p className="text-gray-400">Computer Engineering</p>
@@ -27,11 +27,11 @@ const Education = () => {
           </div>
           
           <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-blue-500 transition-colors">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+            <div className="flex items-start space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
                 <BookOpen size={24} />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="text-xl font-semibold text-white mb-2">High School (Private)</h3>
                 <p className="text-green-400 font-medium mb-1">St. John the Baptist Academy</p>
                 <p className="text-gray-400">Secondary Education</p>
@@ -40,11 +40,11 @@ const Education = () => {
           </div>
           
           <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-blue-500 transition-colors">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center mb-4">
+            <div className="flex items-start space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center flex-shrink-0">
                 <BookOpen size={24} />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="text-xl font-semibold text-white mb-2">High School (Public)</h3>
                 <p className="text-yellow-400 font-medium mb-1">Lakan Dula High School</p>
                 <p className="text-gray-400">Secondary Education</p>

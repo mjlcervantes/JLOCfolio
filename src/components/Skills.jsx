@@ -4,23 +4,23 @@ import '../styles/Skills.css';
 const Skills = () => {
   const skills = {
     technical: [
-      { name: 'C++', level: 70, icon: '💻' },
-      { name: 'Python', level: 75, icon: '🐍' },
-      { name: 'HTML/CSS', level: 60, icon: '🌐' },
-      { name: 'React.js', level: 60, icon: '⚛️' },
-      { name: 'VS Code', level: 70, icon: '🔧' }
+      { name: 'C++', level: 25, icon: '💻' },
+      { name: 'Python', level: 25, icon: '🐍' },
+      { name: 'HTML/CSS', level: 15, icon: '🌐' },
+      { name: 'React.js', level: 15, icon: '⚛️' },
+      { name: 'VS Code', level: 15, icon: '🔧' }
     ],
     nonTechnical: [
-      { name: 'Motorcycle Mechanics', level: 90, icon: '🏍️' },
-      { name: 'Microsoft Office', level: 85, icon: '📊' },
+      { name: 'Motorcycle Mechanics', level: 50, icon: '🏍️' },
+      { name: 'Microsoft Office', level: 70, icon: '📊' },
       { name: 'Research Skills', level: 80, icon: '🔍' },
-      { name: 'Video Editing (CapCut)', level: 70, icon: '🎬' },
-      { name: 'IP & Patent Search', level: 50, icon: '📋' }
+      { name: 'Video Editing (CapCut)', level: 50, icon: '🎬' },
+      { name: 'IP & Patent Search', level: 30, icon: '📋' }
     ]
   };
 
   return (
-    <section id="skills" className="py-20 bg-slate-800/50" style={{ backgroundColor: "rgba(30, 41, 59, 0.5)" }}>
+    <section id="skills" className="py-20 bg-slate-800/50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">

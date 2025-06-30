@@ -10,7 +10,7 @@ const Certificates = () => {
   ];
 
   return (
-    <section id="certificates" className="py-20 bg-slate-800/50" style={{ backgroundColor: "rgba(30, 41, 59, 0.5)" }}>
+    <section id="certificates" className="py-20 bg-slate-800/50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
@@ -21,14 +21,14 @@ const Certificates = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {certificates.map((cert, index) => (
             <div key={index} className="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-yellow-500 transition-all duration-300 hover:scale-105">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center mb-4">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Award size={24} />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h4 className="text-lg font-semibold text-white mb-2">{cert.name}</h4>
                   <p className="text-yellow-400 font-medium mb-1">{cert.issuer}</p>
-                  <div className="flex items-center justify-center space-x-1 text-gray-400 text-sm">
+                  <div className="flex items-center space-x-1 text-gray-400 text-sm">
                     <Calendar size={14} />
                     <span>{cert.date}</span>
                   </div>

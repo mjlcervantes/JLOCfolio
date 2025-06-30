@@ -2,17 +2,7 @@ import React from 'react';
 import { Mail, User, Briefcase, GraduationCap, Award, Code, Menu, X } from 'lucide-react';
 import '../styles/Navigation.css';
 
-const Navigation = ({ activeSection, setActiveSection, scrollToSection }) => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isScrolled, setIsScrolled] = React.useState(false);
-
-  React.useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+const Navigation = ({ activeSection, isMenuOpen, setIsMenuOpen, isScrolled, scrollToSection }) => {
 
   const navigationItems = [
     { id: 'about', label: 'About', icon: User },
