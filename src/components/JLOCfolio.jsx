@@ -386,11 +386,11 @@ const Portfolio = () => {
           const nameVariations = [
             'J4sp3r L3mu3l C3rv4nt3s',
             'Jasper Lemuel Cervantes',
-            'Jâˆ†SPER LEMUEL CERVâˆ†NTES',
+            'J@SPER LEMUEL CERV@NTES',
             'Jasper Lemuel Cervantes',
-            'Jâˆ‚âˆ«pâˆ'Â® Lâˆ'Âµuâˆ'Â¬ Â©âˆ'Â®âˆšâˆ‚âˆ«tâˆ'âˆ«',
+            'J$P3R L3MU3L C3RV@NT3$',
             'Jasper Lemuel Cervantes',
-            'JÎ»SPEÐ¯ ÅEMUEL CEÐ¯VÎ›NTES',
+            'J*SP*R L*MU*L C*RV*NT*S',
             'Jasper Lemuel Cervantes'
           ];
 
