@@ -156,3 +156,46 @@ nav .md\\:hidden button:hover {
 button:hover {
   opacity: 0.9;
 }
+
+/* Animation for GIF background */
+@keyframes pulse {
+  0% { opacity: 0.65; }
+  100% { opacity: 0.75; }
+}
+
+.bg-pulse {
+  animation: pulse 15s infinite alternate;
+}
+
+/* Animation for gradient shift */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.bg-gradient-shift {
+  animation: gradientShift 20s ease infinite alternate;
+  background-size: 200% 200%;
+}
+
+/* Profile image hover effect */
+.profile-image-container {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-image-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(96, 165, 250, 0.6), 0 0 20px rgba(168, 85, 247, 0.6);
+}
+
+/* JC text overlay effect */
+.profile-text-overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
+}
+
+.profile-image-container:hover .profile-text-overlay {
+  opacity: 1;
+}

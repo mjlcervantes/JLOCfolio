@@ -9,7 +9,6 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "gh-pages": "^6.3.0",
     "glitched-writer": "^2.0.29",
     "lucide-react": "^0.523.0",
     "postcss-flexbugs-fixes": "^4.2.1",
@@ -48,6 +47,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.8",
+    "gh-pages": "^6.3.0",
     "postcss": "^7.0.39",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
   }
