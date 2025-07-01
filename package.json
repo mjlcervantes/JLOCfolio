@@ -8,7 +8,6 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "gh-pages": "^6.3.0",
     "lucide-react": "^0.523.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,7 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build && touch build/.nojekyll",
+    "predeploy": "npm run build && echo \"\" > build/.nojekyll",
     "deploy": "gh-pages -d build --dotfiles"
   },
   "eslintConfig": {
@@ -43,6 +42,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11"
   }
