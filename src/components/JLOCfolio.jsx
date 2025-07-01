@@ -20,17 +20,150 @@ import { TypeAnimation } from "react-type-animation";
 // Import CSS for background styles
 import "../styles/portfolio.css";
 
-// Import GlitchedWriter directly
-import GlitchedWriter from "glitched-writer";
+// Using our custom GlitchedWriter implementation from glitched_name_intro.html
+// No need to import the original GlitchedWriter library
 
 // Import assets
 import backgroundGif from "../assets/Timebackground1st.gif";
 import profilePic from "../assets/JLOCfolio Profile.jfif";
 
-// Safe GlitchedWriter implementation
+// Custom GlitchedWriter implementation from glitched_name_intro.html
+class CustomGlitchedWriter {
+  constructor() {
+    this.queue = [];
+    this.isWriting = false;
+    this.currentIndex = 0;
+  }
+
+  queueWrite(texts, queueInterval = 1000, loop = false) {
+    if (Array.isArray(texts)) {
+      this.queue = texts;
+    } else if (typeof texts === 'string') {
+      this.queue = [texts];
+    }
+
+    this.queueInterval = queueInterval;
+    this.loop = loop;
+    this.currentIndex = 0;
+    this.startWriting();
+  }
+
+  async startWriting() {
+    if (this.isWriting) return;
+    this.isWriting = true;
+
+    while (this.currentIndex < this.queue.length) {
+      await this.writeText(this.queue[this.currentIndex]);
+      this.currentIndex++;
+
+      if (this.currentIndex < this.queue.length) {
+        await this.wait(this.queueInterval);
+      }
+    }
+
+    this.handleLoopOrEnd();
+  }
+
+  async writeText(text) {
+    if (!this.element) return;
+    this.element.textContent = '';
+
+    // Add glitch effect during typing
+    this.element.classList.add('typing');
+
+    for (let i = 0; i <= text.length; i++) {
+      const currentText = text.substring(0, i);
+      this.element.textContent = currentText;
+      
+      if (this.element.setAttribute) {
+        this.element.setAttribute('data-text', currentText);
+      }
+
+      // Add random glitch delays
+      const delay = Math.random() > 0.8 ? Math.random() * 200 + 50 : 50;
+      await this.wait(delay);
+
+      // Random glitch character replacement
+      if (Math.random() > 0.9 && i > 0 && this.element) {
+        const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+        const glitchChar = glitchChars[Math.floor(Math.random() * glitchChars.length)];
+        this.element.textContent = currentText.slice(0, -1) + glitchChar;
+        await this.wait(100);
+        if (this.element) {
+          this.element.textContent = currentText;
+        }
+      }
+    }
+
+    if (this.element && this.element.classList) {
+      this.element.classList.remove('typing');
+    }
+  }
+
+  async handleLoopOrEnd() {
+    if (this.loop === true) {
+      this.currentIndex = 0;
+      await this.wait(this.queueInterval);
+      this.startWriting();
+    } else if (typeof this.loop === 'function') {
+      this.loop();
+      this.isWriting = false;
+    } else if (typeof this.loop === 'number') {
+      await this.wait(this.loop);
+      this.currentIndex = 0;
+      this.startWriting();
+    } else {
+      this.isWriting = false;
+    }
+  }
+
+  wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // React-specific methods
+  setElement(element) {
+    this.element = element;
+    return this;
+  }
+
+  write(text) {
+    this.queueWrite([text], 800, false);
+    return this;
+  }
+
+  stop() {
+    this.isWriting = false;
+    this.queue = [];
+    return this;
+  }
+}
+
+// Colors for the glitch effect
+const glitchColors = [
+  '#64ffda', // Cyan
+  '#ff0040', // Red
+  '#00ff80', // Green
+  '#ff6b35', // Orange
+  '#f72585', // Pink
+  '#4cc9f0', // Blue
+  '#7209b7', // Purple
+  '#ffbe0b', // Yellow
+  '#fb8500', // Orange-red
+  '#8ecae6', // Light blue
+  '#219ebc', // Teal
+  '#023047', // Dark blue
+  '#ffb3c6', // Light pink
+  '#84a59d', // Sage green
+  '#f28482'  // Coral
+];
+
+// Safe GlitchedWriter implementation that uses our custom implementation
 const safeGlitchedWriter = {
   isAvailable: true,
-  GlitchedWriter: GlitchedWriter,
+  GlitchedWriter: CustomGlitchedWriter,
+  colors: glitchColors,
+  getRandomColor: () => glitchColors[Math.floor(Math.random() * glitchColors.length)]
 };
 
 const Portfolio = () => {
@@ -82,26 +215,15 @@ const Portfolio = () => {
         }
       }, 7000); // Pulse every 7 seconds
 
-      // Initialize GlitchedWriter
+      // Initialize our custom GlitchedWriter
       try {
-        console.log("Initializing GlitchedWriter");
+        console.log("Initializing CustomGlitchedWriter");
 
-        // Create the writer instance with enhanced options
-        writerRef.current = new GlitchedWriter(nameRef.current, {
-          letterize: true,
-          iterations: 3,
-          fps: 60,
-          fillSpace: true,
-          oneAtATime: false,
-          glyphs:
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-          changeChance: 0.6, // Increased for better effect
-          glitchChance: 0.3, // Increased for better effect
-          randomChance: 0.2, // Increased for better effect
-          ghostChance: 0.2, // Increased for better effect
-          trailingChance: 0.2, // Increased for better effect
-          maxGhosts: 3, // Added for better effect
-        });
+        // Create the writer instance with our custom implementation
+        writerRef.current = new safeGlitchedWriter.GlitchedWriter();
+        
+        // Set the element to write to
+        writerRef.current.setElement(nameRef.current);
 
         // Write the name with a glitch effect after a delay
         setTimeout(() => {
@@ -253,60 +375,53 @@ const Portfolio = () => {
           "0 0 15px rgba(96, 165, 250, 0.9), 0 0 20px rgba(168, 85, 247, 0.8)";
         nameRef.current.style.transform = "scale(1.05)";
 
-        // Try to use GlitchedWriter for the main effect
+        // Try to use our CustomGlitchedWriter for the main effect
         if (
           writerRef.current &&
           typeof writerRef.current.write === "function"
         ) {
-          console.log("Using GlitchedWriter for name glitch effect");
+          console.log("Using CustomGlitchedWriter for name glitch effect");
 
-          // Create a more dramatic effect with temporary options
-          const tempOptions = {
-            iterations: 4,
-            fps: 60,
-            glitchChance: 0.8,
-            randomChance: 0.4,
-            ghostChance: 0.4,
-            trailingChance: 0.4,
-            maxGhosts: 5,
-          };
+          // Different variations of the name for glitch effect
+          const nameVariations = [
+            'J4sp3r L3mu3l C3rv4nt3s',
+            'Jasper Lemuel Cervantes',
+            'Jâˆ†SPER LEMUEL CERVâˆ†NTES',
+            'Jasper Lemuel Cervantes',
+            'Jâˆ‚âˆ«pâˆ'Â® Lâˆ'Âµuâˆ'Â¬ Â©âˆ'Â®âˆšâˆ‚âˆ«tâˆ'âˆ«',
+            'Jasper Lemuel Cervantes',
+            'JÎ»SPEÐ¯ ÅEMUEL CEÐ¯VÎ›NTES',
+            'Jasper Lemuel Cervantes'
+          ];
 
-          // Store original options to restore later
-          const originalOptions = {};
-          if (writerRef.current.options) {
-            Object.keys(tempOptions).forEach((key) => {
-              originalOptions[key] = writerRef.current.options[key];
-              writerRef.current.options[key] = tempOptions[key];
-            });
+          // Apply a random color from our color palette
+          if (nameRef.current) {
+            const randomColor = safeGlitchedWriter.getRandomColor();
+            nameRef.current.style.color = randomColor;
           }
 
-          // Apply the glitch effect
-          writerRef.current.write("Jasper Lemuel Cervantes");
+          // Queue the name variations with a fast interval
+          writerRef.current.queueWrite(nameVariations, 400, false);
 
-          // Restore original options after a delay
+          // Reset visual effects after a delay
           setTimeout(() => {
-            if (writerRef.current && writerRef.current.options) {
-              Object.keys(originalOptions).forEach((key) => {
-                writerRef.current.options[key] = originalOptions[key];
-              });
-            }
-
-            // Reset visual effects
             if (nameRef.current) {
               nameRef.current.style.transform = "scale(1)";
               nameRef.current.style.textShadow = "0 0 0px transparent";
+              // Reset to gradient color
+              nameRef.current.style.color = "";
             }
-          }, 2000);
+          }, 3500);
         } else {
-          // Fallback animation if GlitchedWriter is not available
+          // Fallback animation if CustomGlitchedWriter is not available
           console.log("Using fallback animation for name glitch effect");
 
           const originalText =
             nameRef.current.textContent || "Jasper Lemuel Cervantes";
           const chars =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
           let iterations = 0;
-          const maxIterations = 10; // More iterations for a more dramatic effect
+          const maxIterations = 15; // More iterations for a more dramatic effect
 
           const interval = setInterval(() => {
             if (iterations >= maxIterations) {
@@ -318,6 +433,8 @@ const Portfolio = () => {
                   if (nameRef.current) {
                     nameRef.current.style.textShadow = "0 0 0px transparent";
                     nameRef.current.style.transform = "scale(1)";
+                    // Reset to gradient color
+                    nameRef.current.style.color = "";
                   }
                 }, 500);
               }
@@ -326,13 +443,19 @@ const Portfolio = () => {
 
             // Create a more aggressive scrambled version of the text
             if (nameRef.current) {
+              // Apply a random color from our color palette
+              if (iterations % 3 === 0) {
+                const randomColor = safeGlitchedWriter.getRandomColor();
+                nameRef.current.style.color = randomColor;
+              }
+              
               nameRef.current.textContent = originalText
                 .split("")
                 .map((char, idx) => {
                   // Keep spaces as they are
                   if (char === " ") return " ";
                   // Higher chance to scramble characters
-                  return Math.random() < 0.4
+                  return Math.random() < 0.5
                     ? chars[Math.floor(Math.random() * chars.length)]
                     : char;
                 })
@@ -340,7 +463,7 @@ const Portfolio = () => {
             }
 
             iterations += 1;
-          }, 80); // Faster iterations for more dramatic effect
+          }, 60); // Faster iterations for more dramatic effect
         }
       }
     } catch (error) {
@@ -964,7 +1087,7 @@ const Portfolio = () => {
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Phone</p>
-                    <p className="text-lg font-medium">+63 969 420 0000</p>
+                    <p className="text-lg font-medium">+63 981 562 4203</p>
                   </div>
                 </div>
 
