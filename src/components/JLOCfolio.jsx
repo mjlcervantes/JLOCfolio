@@ -7,7 +7,6 @@ import {
   Award,
   BookOpen,
   Code,
-  Wrench,
   User,
   Briefcase,
   GraduationCap,
@@ -23,6 +22,11 @@ import emailjs from '@emailjs/browser';
 // Import CSS for background styles
 import "../styles/portfolio.css";
 import "../styles/profile-hover.css";
+import "../styles/matrix.css";
+
+// Import Matrix components
+import MatrixLoader from "./MatrixLoader";
+import MatrixBackground from "./MatrixBackground";
 
 // Using our custom GlitchedWriter implementation from glitched_name_intro.html
 // No need to import the original GlitchedWriter library
@@ -174,6 +178,7 @@ const Portfolio = () => {
   const [activeSection, setActiveSection] = useState("about");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const nameRef = useRef(null);
   const writerRef = useRef(null);
   const formRef = useRef(null);
@@ -191,6 +196,7 @@ const Portfolio = () => {
     message: ''
   });
 
+  // Handle scroll effect for navigation bar
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -602,93 +608,76 @@ const Portfolio = () => {
         backgroundImage:
           "linear-gradient(to bottom, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.95))",
         color: "white",
+        opacity: isLoading ? 0 : 1,
+        transition: 'opacity 0.8s ease'
       }}
     >
-      {/* Navigation */}
-      <nav
-        className="fixed top-0 w-full z-50 transition-all duration-300"
-        style={{
-          backgroundColor: isScrolled
-            ? "rgba(15, 23, 42, 0.95)"
-            : "transparent",
-          backdropFilter: isScrolled ? "blur(8px)" : "none",
-          boxShadow: isScrolled
-            ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
-            : "none",
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div
-              className="text-2xl font-bold"
-              style={{
-                background: "linear-gradient(to right, #60a5fa, #a855f7)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              JLC
-            </div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex space-x-8">
-              {navigationItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  style={{
-                    backgroundColor:
-                      activeSection === item.id ? "#2563eb" : "transparent",
-                    color: activeSection === item.id ? "white" : "#d1d5db",
-                  }}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 hover:text-white hover:bg-slate-800"
-                >
-                  <item.icon size={18} />
-                  <span>{item.label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 rounded-lg text-white"
-                style={{ backgroundColor: "#1e293b" }}
+      {/* Matrix Background Effect */}
+      {!isLoading && <MatrixBackground opacity={0.02} />}
+      
+      {/* Matrix Loader */}
+      {isLoading && <MatrixLoader onLoadComplete={() => setIsLoading(false)} />}
+      
+      {/* Navigation - Matrix Style */}
+      <div className="nav-container">
+        <nav className={`nav-bar ${isScrolled ? 'scrolled' : ''}`}>
+          <div className="logo" onClick={() => scrollToSection("about")}>JLC</div>
+          
+          {/* Desktop Navigation */}
+          <div className="nav-links hidden md:flex">
+            {navigationItems.map((item) => (
+              <div 
+                key={item.id}
+                className={`nav-item ${activeSection === item.id ? 'active' : ''}`}
+                onClick={() => scrollToSection(item.id)}
+                data-section={item.id}
               >
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
+                {item.label}
+              </div>
+            ))}
           </div>
-
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div
-              className="md:hidden rounded-lg mt-2 p-4 space-y-2"
-              style={{ backgroundColor: "#1e293b" }}
+          
+          {/* Mobile Menu Button */}
+          <div className="md:hidden ml-auto">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 rounded-lg text-white"
+              style={{ backgroundColor: "rgba(0, 255, 255, 0.2)" }}
             >
-              {navigationItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className="flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-left transition-colors text-gray-300"
-                  style={{
-                    backgroundColor:
-                      activeSection === item.id
-                        ? "rgba(37, 99, 235, 0.5)"
-                        : "transparent",
-                    hover: { backgroundColor: "#334155" },
-                  }}
-                >
-                  <item.icon size={18} />
-                  <span>{item.label}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </nav>
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </nav>
+        
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div
+            className="md:hidden rounded-lg mt-2 p-4 space-y-2"
+            style={{ 
+              backgroundColor: "rgba(15, 20, 25, 0.95)",
+              backdropFilter: "blur(20px)",
+              border: "1px solid rgba(0, 255, 255, 0.3)",
+              borderRadius: "20px"
+            }}
+          >
+            {navigationItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className="flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-left transition-colors"
+                style={{
+                  backgroundColor: activeSection === item.id ? "rgba(0, 255, 255, 0.2)" : "transparent",
+                  borderColor: activeSection === item.id ? "#00ffff" : "transparent",
+                  color: activeSection === item.id ? "#00ffff" : "rgba(255, 255, 255, 0.8)",
+                }}
+              >
+                <item.icon size={18} />
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Hero Section */}
       <section
@@ -823,21 +812,19 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* About Section - Matrix Style */}
       <section id="about" className="py-20 relative">
         {/* Background with inline style for reliability */}
         <div
           className="absolute inset-0"
-          style={{ backgroundColor: "rgba(30, 41, 59, 0.5)" }}
+          style={{ 
+            background: "linear-gradient(135deg, #0f1419 0%, #1a2332 50%, #0f1419 100%)"
+          }}
         ></div>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              About Me
-            </h2>
-          </div>
-
-          <div className="bg-slate-800 rounded-2xl p-8 shadow-2xl border border-slate-700">
+          <div className="matrix-about">
+            <h2>About Me</h2>
+            
             <p className="text-lg md:text-xl text-gray-300 leading-relaxed text-center max-w-4xl mx-auto">
               "Born. Breathed. Blinked. Next thing I know, I'm in school writing
               a bio for my portfolio I didn't ask for. Life's basically a
@@ -845,27 +832,21 @@ const Portfolio = () => {
               before the clock hits zero."
             </p>
 
-            <div className="mt-12 grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <GraduationCap size={32} />
-                </div>
+            <div className="role-cards">
+              <div className="role-card" style={{ '--card-index': 0 }}>
+                <div className="role-icon">🎓</div>
                 <h3 className="text-xl font-semibold mb-2">Student</h3>
                 <p className="text-gray-400">Computer Engineering at TIP</p>
               </div>
 
-              <div className="text-center">
-                <div className="w-16 h-16 bg-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <Code size={32} />
-                </div>
+              <div className="role-card" style={{ '--card-index': 1 }}>
+                <div className="role-icon">💻</div>
                 <h3 className="text-xl font-semibold mb-2">Developer</h3>
                 <p className="text-gray-400">C++, Python, Web Technologies</p>
               </div>
 
-              <div className="text-center">
-                <div className="w-16 h-16 bg-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <Wrench size={32} />
-                </div>
+              <div className="role-card" style={{ '--card-index': 2 }}>
+                <div className="role-icon">🔧</div>
                 <h3 className="text-xl font-semibold mb-2">Problem Solver</h3>
                 <p className="text-gray-400">Hardware & Software Solutions</p>
               </div>
