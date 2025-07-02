@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://mjlcervantes.github.io/JLOCfolio",
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@tailwindcss/postcss7-compat": "^2.2.17",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",

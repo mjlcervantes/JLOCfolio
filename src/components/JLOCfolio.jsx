@@ -14,18 +14,22 @@ import {
   Send,
   Menu,
   X,
+  CheckCircle,
+  AlertCircle,
 } from "lucide-react";
 import { TypeAnimation } from "react-type-animation";
+import emailjs from '@emailjs/browser';
 
 // Import CSS for background styles
 import "../styles/portfolio.css";
+import "../styles/profile-hover.css";
 
 // Using our custom GlitchedWriter implementation from glitched_name_intro.html
 // No need to import the original GlitchedWriter library
 
 // Import assets
 import backgroundGif from "../assets/Timebackground1st.gif";
-import profilePic from "../assets/JLOCfolio Profile.jfif";
+import profilePic from "../assets/JLOCfolio Profile.jpg";
 
 // Custom GlitchedWriter implementation from glitched_name_intro.html
 class CustomGlitchedWriter {
@@ -172,6 +176,20 @@ const Portfolio = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const nameRef = useRef(null);
   const writerRef = useRef(null);
+  const formRef = useRef(null);
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [formStatus, setFormStatus] = useState({
+    submitting: false,
+    submitted: false,
+    success: false,
+    message: ''
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -179,6 +197,13 @@ const Portfolio = () => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  
+  // Initialize EmailJS
+  useEffect(() => {
+    // Initialize EmailJS with your public key
+    // Replace 'YOUR_EMAILJS_PUBLIC_KEY' with your actual EmailJS public key
+    emailjs.init('YOUR_EMAILJS_PUBLIC_KEY');
   }, []);
 
   useEffect(() => {
@@ -363,6 +388,89 @@ const Portfolio = () => {
       element.scrollIntoView({ behavior: "smooth" });
     }
     setIsMenuOpen(false);
+  };
+  
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+  
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validate form
+    if (!formData.name || !formData.email || !formData.message) {
+      setFormStatus({
+        submitting: false,
+        submitted: true,
+        success: false,
+        message: 'Please fill in all fields'
+      });
+      return;
+    }
+    
+    // Set submitting state
+    setFormStatus({
+      submitting: true,
+      submitted: false,
+      success: false,
+      message: ''
+    });
+    
+    try {
+      // EmailJS service, template, and public key
+      // You'll need to replace these with your actual EmailJS credentials
+      const serviceId = 'service_jlocfolio';
+      const templateId = 'template_jlocfolio';
+      const publicKey = 'YOUR_EMAILJS_PUBLIC_KEY';
+      
+      // Send the email
+      const result = await emailjs.sendForm(
+        serviceId,
+        templateId,
+        formRef.current,
+        publicKey
+      );
+      
+      console.log('Email sent successfully:', result.text);
+      
+      // Reset form and show success message
+      setFormData({
+        name: '',
+        email: '',
+        message: ''
+      });
+      
+      setFormStatus({
+        submitting: false,
+        submitted: true,
+        success: true,
+        message: 'Message sent successfully! I will get back to you soon.'
+      });
+      
+      // Clear success message after 5 seconds
+      setTimeout(() => {
+        setFormStatus(prev => ({
+          ...prev,
+          submitted: false
+        }));
+      }, 5000);
+      
+    } catch (error) {
+      console.error('Error sending email:', error);
+      
+      setFormStatus({
+        submitting: false,
+        submitted: true,
+        success: false,
+        message: 'Failed to send message. Please try again later.'
+      });
+    }
   };
 
   const triggerNameGlitch = () => {
@@ -632,29 +740,16 @@ const Portfolio = () => {
 
         <div className="text-center z-10 max-w-4xl mx-auto px-4 relative">
           <div className="mb-8">
-            <div 
-              className="w-48 h-48 rounded-full mx-auto mb-6 flex items-center justify-center shadow-2xl overflow-hidden border-4 profile-image-container"
-              style={{
-                backgroundImage: `url(${profilePic})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                borderImage: "linear-gradient(to right, #60a5fa, #a855f7) 1",
-                boxShadow: "0 0 25px rgba(96, 165, 250, 0.5), 0 0 15px rgba(168, 85, 247, 0.5)",
-              }}
-            >
-              {/* JC text overlay on the profile image */}
-              <div className="w-full h-full flex items-center justify-center profile-text-overlay">
-                <span 
-                  className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500"
-                  style={{
-                    textShadow: "0 0 10px rgba(255, 255, 255, 0.7)",
-                    filter: "drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))"
-                  }}
-                >
-                  JC
-                </span>
+            <div className="profile-container mx-auto mb-6">
+              {/* Profile picture (hidden by default) */}
+              <img src={profilePic} alt="Jasper Lemuel Cervantes" className="profile-picture" />
+              
+              {/* JLC initials overlay (visible by default) */}
+              <div className="initials-overlay">
+                <div className="initials-text">JLC</div>
               </div>
             </div>
+            <p className="hover-hint">(Hover over "JLC" to reveal my photo)</p>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold mb-6 cursor-pointer">
@@ -1113,7 +1208,7 @@ const Portfolio = () => {
                 Send a Message
               </h3>
 
-              <form className="space-y-6">
+              <form ref={formRef} className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label
                     htmlFor="name"
@@ -1124,6 +1219,9 @@ const Portfolio = () => {
                   <input
                     type="text"
                     id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-3 bg-slate-700/80 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white shadow-inner transition-all duration-300 hover:bg-slate-700"
                     placeholder="John Doe"
                   />
@@ -1139,6 +1237,9 @@ const Portfolio = () => {
                   <input
                     type="email"
                     id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-3 bg-slate-700/80 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white shadow-inner transition-all duration-300 hover:bg-slate-700"
                     placeholder="john@example.com"
                   />
@@ -1153,18 +1254,47 @@ const Portfolio = () => {
                   </label>
                   <textarea
                     id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
                     rows="5"
                     className="w-full px-4 py-3 bg-slate-700/80 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-white resize-none shadow-inner transition-all duration-300 hover:bg-slate-700"
                     placeholder="Hello, I'd like to talk about..."
                   ></textarea>
                 </div>
+                
+                {/* Form status message */}
+                {formStatus.submitted && (
+                  <div className={`p-4 rounded-lg flex items-center space-x-2 ${formStatus.success ? 'bg-green-900/30 text-green-400 border border-green-800' : 'bg-red-900/30 text-red-400 border border-red-800'}`}>
+                    {formStatus.success ? (
+                      <CheckCircle size={20} className="flex-shrink-0" />
+                    ) : (
+                      <AlertCircle size={20} className="flex-shrink-0" />
+                    )}
+                    <span>{formStatus.message}</span>
+                  </div>
+                )}
 
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg transform hover:scale-[1.02] hover:shadow-xl"
+                  disabled={formStatus.submitting}
+                  className={`w-full flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-medium transition-all duration-300 shadow-lg transform ${
+                    formStatus.submitting 
+                      ? 'opacity-70 cursor-not-allowed' 
+                      : 'hover:from-blue-700 hover:to-purple-700 hover:scale-[1.02] hover:shadow-xl'
+                  }`}
                 >
-                  <Send size={18} />
-                  <span>Send Message</span>
+                  {formStatus.submitting ? (
+                    <>
+                      <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send size={18} />
+                      <span>Send Message</span>
+                    </>
+                  )}
                 </button>
               </form>
             </div>
