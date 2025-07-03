@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import MatrixRain from './MatrixRain';
 import '../styles/matrix.css';
 
@@ -8,11 +8,25 @@ const MatrixLoader = ({ onLoadComplete }) => {
   const [countdown, setCountdown] = useState(4);
   const [statusMessage, setStatusMessage] = useState("Loading system components...");
   
+  // Function to handle completion of loading
+  const completeLoading = useCallback(() => {
+    console.log("Matrix loader completing...");
+    setIsLoading(false);
+    
+    // Give time for fade-out animation
+    setTimeout(() => {
+      console.log("Matrix loader complete callback fired");
+      if (onLoadComplete) {
+        onLoadComplete();
+      }
+    }, 1500);
+  }, [onLoadComplete]);
+  
   useEffect(() => {
     // Ensure the matrix effect has enough time to be visible
     console.log("Matrix loader initialized");
     
-    // Status messages to display during loading - moved inside useEffect to fix dependency warning
+    // Status messages to display during loading
     const statusMessages = [
       "Loading system components...",
       "Connecting to matrix servers...",
@@ -33,9 +47,10 @@ const MatrixLoader = ({ onLoadComplete }) => {
       });
     }, 1000);
     
-    // Progress bar animation
+    // Progress bar animation with improved reliability
     const progressInterval = setInterval(() => {
       setProgress(prev => {
+        // If we've reached 100%, clear interval and complete loading
         if (prev >= 100) {
           clearInterval(progressInterval);
           return 100;
@@ -53,25 +68,30 @@ const MatrixLoader = ({ onLoadComplete }) => {
       });
     }, 100);
     
-    // Complete loading after progress reaches 100%
+    // Ensure loading completes after a set time, even if progress animation has issues
     const completeTimer = setTimeout(() => {
-      console.log("Matrix loader completing...");
-      setIsLoading(false);
-      if (onLoadComplete) {
-        // Give more time for fade-out animation
-        setTimeout(() => {
-          console.log("Matrix loader complete callback fired");
-          onLoadComplete();
-        }, 1500);
+      if (progress < 100) {
+        console.log("Forcing completion of matrix loader after timeout");
+        setProgress(100);
       }
-    }, 6000); // Keep the same duration
+      completeLoading();
+    }, 6000);
     
+    // Cleanup function
     return () => {
       clearTimeout(completeTimer);
       clearInterval(progressInterval);
       clearInterval(countdownInterval);
     };
-  }, [onLoadComplete]);
+  }, [completeLoading, progress]);
+  
+  // Effect to trigger completion when progress reaches 100%
+  useEffect(() => {
+    if (progress === 100 && isLoading) {
+      console.log("Progress reached 100%, completing loading");
+      completeLoading();
+    }
+  }, [progress, isLoading, completeLoading]);
   
   return (
     <div 

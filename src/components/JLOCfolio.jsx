@@ -208,8 +208,8 @@ const Portfolio = () => {
   // Initialize EmailJS
   useEffect(() => {
     // Initialize EmailJS with your public key
-    // Replace 'YOUR_EMAILJS_PUBLIC_KEY' with your actual EmailJS public key
-    emailjs.init('YOUR_EMAILJS_PUBLIC_KEY');
+    // Using a default public key for now - replace with your actual key
+    emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'default_public_key');
   }, []);
 
   useEffect(() => {
@@ -251,21 +251,25 @@ const Portfolio = () => {
         console.log("Initializing CustomGlitchedWriter");
 
         // Create the writer instance with our custom implementation
-        writerRef.current = new safeGlitchedWriter.GlitchedWriter();
-        
-        // Set the element to write to
-        writerRef.current.setElement(nameRef.current);
+        if (!writerRef.current) {
+          writerRef.current = new safeGlitchedWriter.GlitchedWriter();
+          
+          // Set the element to write to
+          writerRef.current.setElement(nameRef.current);
+        }
 
         // Write the name with a glitch effect after a delay
         setTimeout(() => {
-          if (writerRef.current) {
+          if (writerRef.current && nameRef.current) {
+            console.log("Triggering initial glitch effect");
             writerRef.current.write(fullName);
           }
         }, 800);
 
         // Set up a timer to re-trigger the effect occasionally
         const glitchInterval = setInterval(() => {
-          if (document.visibilityState === "visible" && writerRef.current) {
+          if (document.visibilityState === "visible" && writerRef.current && nameRef.current) {
+            console.log("Re-triggering glitch effect");
             writerRef.current.write(fullName);
           }
         }, 10000); // Re-trigger every 10 seconds (more frequent than before)
@@ -430,10 +434,10 @@ const Portfolio = () => {
     
     try {
       // EmailJS service, template, and public key
-      // You'll need to replace these with your actual EmailJS credentials
-      const serviceId = 'service_jlocfolio';
-      const templateId = 'template_jlocfolio';
-      const publicKey = 'YOUR_EMAILJS_PUBLIC_KEY';
+      // Using environment variables or default values
+      const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_jlocfolio';
+      const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'template_jlocfolio';
+      const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'default_public_key';
       
       // Send the email
       const result = await emailjs.sendForm(
@@ -490,10 +494,7 @@ const Portfolio = () => {
         nameRef.current.style.transform = "scale(1.05)";
 
         // Try to use our CustomGlitchedWriter for the main effect
-        if (
-          writerRef.current &&
-          typeof writerRef.current.write === "function"
-        ) {
+        if (nameRef.current) {
           console.log("Using CustomGlitchedWriter for name glitch effect");
 
           // Different variations of the name for glitch effect
@@ -509,13 +510,22 @@ const Portfolio = () => {
           ];
 
           // Apply a random color from our color palette
-          if (nameRef.current) {
-            const randomColor = safeGlitchedWriter.getRandomColor();
-            nameRef.current.style.color = randomColor;
+          const randomColor = safeGlitchedWriter.getRandomColor();
+          nameRef.current.style.color = randomColor;
+
+          // Initialize writer if it doesn't exist
+          if (!writerRef.current) {
+            writerRef.current = new safeGlitchedWriter.GlitchedWriter();
+            writerRef.current.setElement(nameRef.current);
           }
 
           // Queue the name variations with a fast interval
-          writerRef.current.queueWrite(nameVariations, 400, false);
+          if (typeof writerRef.current.queueWrite === "function") {
+            writerRef.current.queueWrite(nameVariations, 400, false);
+          } else if (typeof writerRef.current.write === "function") {
+            // Fallback to write if queueWrite is not available
+            writerRef.current.write(nameVariations[0]);
+          }
 
           // Reset visual effects after a delay
           setTimeout(() => {
@@ -612,11 +622,17 @@ const Portfolio = () => {
         transition: 'opacity 0.8s ease'
       }}
     >
-      {/* Matrix Background Effect */}
-      {!isLoading && <MatrixBackground opacity={0.02} />}
+      {/* Matrix Background Effect - only show after loading is complete */}
+      {!isLoading && <MatrixBackground opacity={0.05} />}
       
-      {/* Matrix Loader */}
-      {isLoading && <MatrixLoader onLoadComplete={() => setIsLoading(false)} />}
+      {/* Matrix Loader - always render during loading state */}
+      <MatrixLoader onLoadComplete={() => {
+        console.log("Matrix loading complete, transitioning to main content");
+        // Add a slight delay before showing the main content for smoother transition
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
+      }} />
       
       {/* Navigation - Matrix Style */}
       <div className="nav-container">
