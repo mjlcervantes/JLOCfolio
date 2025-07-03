@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { TypeAnimation } from 'react-type-animation';
 import MatrixRain from './MatrixRain';
 import '../styles/matrix.css';
 
@@ -7,6 +8,8 @@ const MatrixLoader = ({ onLoadComplete }) => {
   const [progress, setProgress] = useState(0);
   const [countdown, setCountdown] = useState(4);
   const [statusMessage, setStatusMessage] = useState("Loading system components...");
+  const [showNameIntro, setShowNameIntro] = useState(false);
+  const nameRef = useRef(null);
   
   // Function to handle completion of loading
   const completeLoading = useCallback(() => {
@@ -21,6 +24,21 @@ const MatrixLoader = ({ onLoadComplete }) => {
       }
     }, 1500);
   }, [onLoadComplete]);
+  
+  // Handle the name intro animation sequence
+  useEffect(() => {
+    if (progress >= 100 && isLoading) {
+      // Show name intro after progress reaches 100%
+      setShowNameIntro(true);
+      
+      // Set a timeout to complete the loading after name intro
+      const nameIntroTimer = setTimeout(() => {
+        completeLoading();
+      }, 6000); // Allow time for the name animation to play
+      
+      return () => clearTimeout(nameIntroTimer);
+    }
+  }, [progress, isLoading, completeLoading]);
   
   useEffect(() => {
     // Ensure the matrix effect has enough time to be visible
@@ -50,7 +68,7 @@ const MatrixLoader = ({ onLoadComplete }) => {
     // Progress bar animation with improved reliability
     const progressInterval = setInterval(() => {
       setProgress(prev => {
-        // If we've reached 100%, clear interval and complete loading
+        // If we've reached 100%, clear interval
         if (prev >= 100) {
           clearInterval(progressInterval);
           return 100;
@@ -68,30 +86,61 @@ const MatrixLoader = ({ onLoadComplete }) => {
       });
     }, 100);
     
-    // Ensure loading completes after a set time, even if progress animation has issues
-    const completeTimer = setTimeout(() => {
+    // Ensure loading progress completes after a set time
+    const progressTimer = setTimeout(() => {
       if (progress < 100) {
-        console.log("Forcing completion of matrix loader after timeout");
+        console.log("Forcing progress completion after timeout");
         setProgress(100);
       }
-      completeLoading();
-    }, 6000);
+    }, 5000);
     
     // Cleanup function
     return () => {
-      clearTimeout(completeTimer);
+      clearTimeout(progressTimer);
       clearInterval(progressInterval);
       clearInterval(countdownInterval);
     };
-  }, [completeLoading, progress]);
+  }, [progress]);
   
-  // Effect to trigger completion when progress reaches 100%
+  // Matrix character effect for name
   useEffect(() => {
-    if (progress === 100 && isLoading) {
-      console.log("Progress reached 100%, completing loading");
-      completeLoading();
+    if (showNameIntro && nameRef.current) {
+      const element = nameRef.current;
+      const fullName = "Jasper Lemuel Cervantes";
+      
+      // Add glitch effect to the name
+      const addGlitchEffect = () => {
+        let iteration = 0;
+        const maxIterations = fullName.length * 2;
+        
+        const interval = setInterval(() => {
+          if (iteration >= maxIterations) {
+            clearInterval(interval);
+            element.textContent = fullName;
+            return;
+          }
+          
+          element.textContent = fullName
+            .split("")
+            .map((letter, index) => {
+              if (index < iteration / 2) {
+                return fullName[index];
+              }
+              
+              const glitchChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+              return glitchChars[Math.floor(Math.random() * glitchChars.length)];
+            })
+            .join("");
+          
+          iteration += 1;
+        }, 50);
+        
+        return () => clearInterval(interval);
+      };
+      
+      addGlitchEffect();
     }
-  }, [progress, isLoading, completeLoading]);
+  }, [showNameIntro]);
   
   return (
     <div 
@@ -111,27 +160,59 @@ const MatrixLoader = ({ onLoadComplete }) => {
       }}
     >
       <MatrixRain />
-      <div className="loading-content">
-        <div className="loading-title">JLC.INIT()</div>
-        <div className="loading-text">Initializing Portfolio Matrix...</div>
-        
-        {/* Countdown Timer */}
-        <div className="countdown">{countdown}</div>
-        
-        {/* Progress Container */}
-        <div className="progress-container">
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${progress}%` }}
-            ></div>
+      
+      {!showNameIntro ? (
+        // Initial loading screen
+        <div className="loading-content">
+          <div className="loading-title">JLC.INIT()</div>
+          <div className="loading-text">Initializing Portfolio Matrix...</div>
+          
+          {/* Countdown Timer */}
+          <div className="countdown">{countdown}</div>
+          
+          {/* Progress Container */}
+          <div className="progress-container">
+            <div className="progress-bar">
+              <div 
+                className="progress-fill" 
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <div className="progress-percentage">{Math.floor(progress)}%</div>
           </div>
-          <div className="progress-percentage">{Math.floor(progress)}%</div>
+          
+          {/* Status Text */}
+          <div className="status-text">{statusMessage}</div>
         </div>
-        
-        {/* Status Text */}
-        <div className="status-text">{statusMessage}</div>
-      </div>
+      ) : (
+        // Name intro animation after loading completes
+        <div className="name-intro-container">
+          {/* Matrix-style name reveal */}
+          <div className="name-intro">
+            <h1 ref={nameRef} className="matrix-name">Jasper Lemuel Cervantes</h1>
+            
+            {/* Animated subtitle with TypeAnimation */}
+            <div className="matrix-subtitle">
+              <TypeAnimation
+                sequence={[
+                  'Welcome to my portfolio',
+                  1000,
+                  'Computer Engineering Student',
+                  1000,
+                  'Web Developer',
+                  1000,
+                  'Explore my work...',
+                  1000
+                ]}
+                wrapper="span"
+                speed={50}
+                style={{ fontSize: '1.5em', display: 'inline-block', color: '#00ff00' }}
+                repeat={1}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -16,6 +16,75 @@
     font-family: 'Courier New', monospace;
 }
 
+/* Name Intro Animation Styles */
+.name-intro-container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 40px;
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.name-intro {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    box-shadow: 
+        0 0 50px rgba(0, 255, 0, 0.2),
+        inset 0 0 20px rgba(0, 255, 0, 0.05);
+    animation: nameIntroPulse 3s ease-in-out infinite;
+}
+
+.matrix-name {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #00ff00;
+    text-shadow: 
+        0 0 10px #00ff00,
+        0 0 20px #00ff00;
+    letter-spacing: 2px;
+    animation: nameGlow 2s ease-in-out infinite alternate;
+}
+
+.matrix-subtitle {
+    margin-top: 20px;
+    min-height: 2em;
+}
+
+@keyframes nameIntroPulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 50px rgba(0, 255, 0, 0.2),
+            inset 0 0 20px rgba(0, 255, 0, 0.05);
+    }
+    50% {
+        box-shadow: 
+            0 0 70px rgba(0, 255, 0, 0.3),
+            inset 0 0 30px rgba(0, 255, 0, 0.1);
+    }
+}
+
+@keyframes nameGlow {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px #00ff00,
+            0 0 20px #00ff00;
+    }
+    50% {
+        text-shadow: 
+            0 0 15px #00ff00,
+            0 0 30px #00ff00,
+            0 0 45px #00ff00;
+    }
+}
+
 .matrix-canvas {
     position: absolute;
     top: 0;
