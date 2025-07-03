@@ -13,6 +13,7 @@
     align-items: center;
     opacity: 1;
     transition: opacity 1s ease;
+    font-family: 'Courier New', monospace;
 }
 
 .matrix-canvas {
@@ -21,46 +22,152 @@
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 5; /* Ensure it's above background but below content */
+    pointer-events: none; /* Allow clicking through */
 }
 
+/* Loading Content Container */
 .loading-content {
     position: relative;
     z-index: 10;
     text-align: center;
-    animation: pulse 2s infinite;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    box-shadow: 
+        0 0 50px rgba(0, 255, 0, 0.2),
+        inset 0 0 20px rgba(0, 255, 0, 0.05);
+    backdrop-filter: blur(10px);
+    animation: containerPulse 3s ease-in-out infinite;
 }
 
+/* JLC.INIT() Title with Glitch Effect */
 .loading-title {
-    font-size: 3rem;
+    font-size: 4rem;
     font-weight: bold;
-    margin-bottom: 1rem;
-    text-shadow: 0 0 20px #00ff00;
-    animation: glitch 3s infinite;
+    margin-bottom: 2rem;
     color: #00ff00;
+    text-shadow: 
+        0 0 10px #00ff00,
+        0 0 20px #00ff00,
+        0 0 30px #00ff00;
+    animation: glitchTitle 2s infinite;
+    position: relative;
+    display: inline-block;
 }
 
+.loading-title::before,
+.loading-title::after {
+    content: 'JLC.INIT()';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.loading-title::before {
+    animation: glitchBefore 2s infinite;
+    color: #ff0000;
+    z-index: -1;
+}
+
+.loading-title::after {
+    animation: glitchAfter 2s infinite;
+    color: #0000ff;
+    z-index: -2;
+}
+
+/* Loading Text */
 .loading-text {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     margin-bottom: 2rem;
-    opacity: 0.8;
+    opacity: 0.9;
     color: #00ff00;
+    animation: textFlicker 1.5s ease-in-out infinite alternate;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* Countdown Timer */
+.countdown {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #00ffff;
+    text-shadow: 
+        0 0 10px #00ffff,
+        0 0 20px #00ffff;
+    animation: countdownPulse 1s ease-in-out infinite;
+}
+
+/* Progress Container */
+.progress-container {
+    width: 400px;
+    margin: 0 auto;
+    position: relative;
 }
 
 .progress-bar {
-    width: 300px;
-    height: 4px;
-    background: rgba(0, 255, 0, 0.2);
-    border-radius: 2px;
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 10px;
     overflow: hidden;
-    margin: 0 auto;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.2),
+        inset 0 0 10px rgba(0, 255, 255, 0.05);
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #00ff00, #00ff00, #ffffff);
+    background: linear-gradient(
+        90deg, 
+        #00ffff 0%, 
+        #00ccff 25%, 
+        #0099ff 50%, 
+        #00ccff 75%, 
+        #00ffff 100%
+    );
     width: 0%;
-    animation: loading 4s ease-in-out forwards;
-    box-shadow: 0 0 10px #00ff00;
+    border-radius: 10px;
+    box-shadow: 
+        0 0 20px #00ffff,
+        0 0 40px rgba(0, 255, 255, 0.3);
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        transparent 100%
+    );
+    animation: progressShine 2s ease-in-out infinite;
+}
+
+/* Progress Percentage */
+.progress-percentage {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    font-weight: bold;
+}
+
+/* Loading Status Text */
+.status-text {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: rgba(0, 255, 0, 0.8);
+    animation: statusBlink 2s ease-in-out infinite;
 }
 
 /* Futuristic Navigation Styles */
@@ -340,6 +447,132 @@
 .role-card:nth-child(3) .role-icon { animation-delay: -2s; }
 
 /* Animations */
+/* Matrix Loader Animations */
+@keyframes glitchTitle {
+    0%, 90%, 100% {
+        transform: translate(0);
+        filter: hue-rotate(0deg);
+    }
+    10% {
+        transform: translate(-2px, 2px);
+        filter: hue-rotate(90deg);
+    }
+    20% {
+        transform: translate(2px, -2px);
+        filter: hue-rotate(180deg);
+    }
+    30% {
+        transform: translate(-2px, -2px);
+        filter: hue-rotate(270deg);
+    }
+    40% {
+        transform: translate(2px, 2px);
+        filter: hue-rotate(360deg);
+    }
+    50% {
+        transform: translate(-2px, 2px);
+        filter: hue-rotate(90deg);
+    }
+    60% {
+        transform: translate(2px, -2px);
+        filter: hue-rotate(180deg);
+    }
+    70% {
+        transform: translate(-2px, -2px);
+        filter: hue-rotate(270deg);
+    }
+    80% {
+        transform: translate(2px, 2px);
+        filter: hue-rotate(360deg);
+    }
+}
+
+@keyframes glitchBefore {
+    0%, 90%, 100% {
+        transform: translate(0);
+        opacity: 0;
+    }
+    10% {
+        transform: translate(-3px, 3px);
+        opacity: 0.7;
+    }
+    20% {
+        transform: translate(3px, -3px);
+        opacity: 0.5;
+    }
+    30% {
+        transform: translate(-3px, -3px);
+        opacity: 0.8;
+    }
+    40% {
+        transform: translate(3px, 3px);
+        opacity: 0.3;
+    }
+}
+
+@keyframes glitchAfter {
+    0%, 90%, 100% {
+        transform: translate(0);
+        opacity: 0;
+    }
+    15% {
+        transform: translate(2px, -2px);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translate(-2px, 2px);
+        opacity: 0.4;
+    }
+    35% {
+        transform: translate(2px, 2px);
+        opacity: 0.7;
+    }
+    45% {
+        transform: translate(-2px, -2px);
+        opacity: 0.2;
+    }
+}
+
+@keyframes containerPulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 50px rgba(0, 255, 0, 0.2),
+            inset 0 0 20px rgba(0, 255, 0, 0.05);
+    }
+    50% {
+        box-shadow: 
+            0 0 80px rgba(0, 255, 0, 0.4),
+            inset 0 0 30px rgba(0, 255, 0, 0.1);
+    }
+}
+
+@keyframes textFlicker {
+    0% { opacity: 0.9; }
+    100% { opacity: 1; text-shadow: 0 0 15px rgba(0, 255, 0, 0.8); }
+}
+
+@keyframes countdownPulse {
+    0%, 100% {
+        transform: scale(1);
+        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    }
+    50% {
+        transform: scale(1.05);
+        text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff;
+    }
+}
+
+@keyframes progressShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400px); }
+}
+
+@keyframes statusBlink {
+    0%, 50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+/* Original animations - keeping for compatibility */
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.7; }
@@ -359,6 +592,9 @@
 
 @keyframes loading {
     0% { width: 0%; }
+    10% { width: 15%; } /* Slower at start for better effect */
+    50% { width: 50%; }
+    75% { width: 75%; }
     100% { width: 100%; }
 }
 
@@ -402,5 +638,37 @@
 
     .role-cards {
         grid-template-columns: 1fr;
+    }
+    
+    /* Matrix Loader Responsive Styles */
+    .loading-content {
+        padding: 30px 20px;
+        margin: 0 20px;
+    }
+    
+    .loading-title {
+        font-size: 2.5rem;
+    }
+    
+    .loading-text {
+        font-size: 1.1rem;
+    }
+    
+    .countdown {
+        font-size: 1.5rem;
+    }
+    
+    .progress-container {
+        width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .loading-title {
+        font-size: 2rem;
+    }
+    
+    .progress-container {
+        width: 250px;
     }
 }

@@ -17,44 +17,58 @@ const MatrixRain = ({ onLoadComplete }) => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
     
-    // Matrix characters
+    // Enhanced Matrix characters including Japanese characters for more visual impact
     const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}";
-    const characters = matrix.split("");
+    const japaneseChars = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトホモヨョロヲゴゾドボポヴッン";
+    const allChars = (matrix + japaneseChars).split("");
     
-    const fontSize = 10;
-    const columns = canvas.width / fontSize;
+    const fontSize = 12; // Slightly larger font
+    const columns = Math.floor(canvas.width / fontSize);
     
-    // Array to track the y position of each column
+    // Arrays to track properties of each column
     const drops = [];
+    const speeds = [];
+    const opacities = [];
+    
+    // Initialize with random values for more dynamic effect
     for (let i = 0; i < columns; i++) {
-      drops[i] = 1;
+      drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
+      speeds[i] = Math.random() * 0.5 + 0.5; // Random speed between 0.5 and 1
+      opacities[i] = Math.random() * 0.5 + 0.5; // Random opacity
     }
     
-    // Drawing the characters
+    // Drawing the characters with enhanced effects
     const draw = () => {
       // Black background with opacity to create trail effect
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.03)'; // Lower opacity for longer trails
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Green text
-      ctx.fillStyle = '#0F0';
-      ctx.font = fontSize + 'px arial';
+      // Set font
+      ctx.font = fontSize + 'px monospace';
       
       // Loop through drops
       for (let i = 0; i < drops.length; i++) {
-        // Random character
-        const text = characters[Math.floor(Math.random() * characters.length)];
+        // Create gradient effect for each character
+        const gradient = ctx.createLinearGradient(0, drops[i] * fontSize - 100, 0, drops[i] * fontSize);
+        gradient.addColorStop(0, `rgba(0, 255, 0, ${opacities[i] * 0.1})`);
+        gradient.addColorStop(0.8, `rgba(0, 255, 0, ${opacities[i] * 0.8})`);
+        gradient.addColorStop(1, `rgba(0, 255, 0, ${opacities[i]})`);
         
-        // x = i * fontSize, y = drops[i] * fontSize
+        ctx.fillStyle = gradient;
+        
+        // Random character
+        const text = allChars[Math.floor(Math.random() * allChars.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
         
-        // Reset drop position if it's at the bottom or randomly
+        // Reset drop when it reaches bottom or randomly
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
+          speeds[i] = Math.random() * 0.5 + 0.5; // Randomize speed again
+          opacities[i] = Math.random() * 0.5 + 0.5; // Randomize opacity again
         }
         
-        // Increment y coordinate
-        drops[i]++;
+        // Move drop down at its specific speed
+        drops[i] += speeds[i];
       }
       
       requestRef.current = requestAnimationFrame(draw);
