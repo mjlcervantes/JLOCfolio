@@ -27,6 +27,7 @@ import "../styles/matrix.css";
 // Import Matrix components
 import MatrixLoader from "./MatrixLoader";
 import MatrixBackground from "./MatrixBackground";
+import MatrixLoadingIntro from "./MatrixLoadingIntro";
 
 // Using our custom GlitchedWriter implementation from glitched_name_intro.html
 // No need to import the original GlitchedWriter library
@@ -179,6 +180,7 @@ const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showMatrixIntro, setShowMatrixIntro] = useState(true);
   const nameRef = useRef(null);
   const writerRef = useRef(null);
   const formRef = useRef(null);
@@ -211,6 +213,13 @@ const Portfolio = () => {
     // Using a default public key for now - replace with your actual key
     emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'default_public_key');
   }, []);
+  
+  // Handle matrix intro completion
+  const handleMatrixIntroComplete = () => {
+    console.log("Matrix intro animation completed");
+    setShowMatrixIntro(false);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     // Enhanced animation function with improved GlitchedWriter implementation
@@ -625,14 +634,18 @@ const Portfolio = () => {
       {/* Matrix Background Effect - only show after loading is complete */}
       {!isLoading && <MatrixBackground opacity={0.05} />}
       
-      {/* Matrix Loader - always render during loading state */}
-      <MatrixLoader onLoadComplete={() => {
-        console.log("Matrix loading complete, transitioning to main content");
-        // Add a slight delay before showing the main content for smoother transition
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 500);
-      }} />
+      {/* Choose between Matrix Intro or Matrix Loader based on showMatrixIntro state */}
+      {showMatrixIntro ? (
+        <MatrixLoadingIntro onLoadComplete={handleMatrixIntroComplete} />
+      ) : (
+        <MatrixLoader onLoadComplete={() => {
+          console.log("Matrix loading complete, transitioning to main content");
+          // Add a slight delay before showing the main content for smoother transition
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 500);
+        }} />
+      )}
       
       {/* Navigation - Matrix Style */}
       <div className="nav-container">
